@@ -1,0 +1,5 @@
+venv
+src/mistral_mlx/weights_and_tokenizer
+.DS_Store
+.vscode/
+__pycache__/

@@ -1,0 +1,1 @@
+MODEL_PATH = "mistral_mlx/weights_and_tokenizer"
