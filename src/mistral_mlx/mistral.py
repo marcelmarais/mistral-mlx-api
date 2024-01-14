@@ -210,7 +210,7 @@ def load_model(folder: str) -> Tuple[Mistral, Tokenizer]:
 
 
 def generate(prompt: mx.array, model: Mistral, temp: float = 0.5):
-    assert temp > 0, "Temperature must be greater than 0"
+    assert temp >= 0, "Temperature must be greater than or equal to 0"
 
     def sample(logits):
         return mx.random.categorical(logits * (1 / temp))
@@ -237,6 +237,7 @@ def generate_text(
     mx.random.seed(seed)
 
     print("[INFO] Starting generation...")
+    
     prompt: mx.array = mx.array(tokenizer.encode(prompt))
     tokens = []
 
@@ -244,6 +245,28 @@ def generate_text(
         if token == tokenizer.eos_id:
             break
         tokens.append(token)
-
+        
     generated_response = tokenizer.decode([t.item() for t in tokens])
     return Message(role=Role.assistant, content=generated_response)
+
+def generate_text_from_tokens(
+    model: Mistral,
+    tokenizer: Tokenizer,
+    prompt_tokens: mx.array,  # type: ignore
+    max_tokens: int,
+    temp: float,
+    tokens_per_eval: int,
+    seed: int,
+) -> Message:
+    mx.random.seed(seed)
+
+    print("[INFO] Starting generation...")
+
+    tokens = []
+    for token, _ in zip(generate(prompt_tokens, model, temp), range(max_tokens)):
+        if token == tokenizer.eos_id:
+            break
+        tokens.append(token)
+    [print(str(i), tokenizer.decode([i.item()])) for i in tokens]
+    generated_response = tokenizer.decode([t.item() for t in tokens])
+    return Message(role=Role.assistant, content=generated_response[1:])

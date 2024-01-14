@@ -10,29 +10,32 @@ from data_models import (
     Message,
     Role,
 )
-from mistral_mlx.mistral import generate_text, load_model
+from mistral_mlx.mistral import generate_text_from_tokens, load_model
+import mlx.core as mx
 
 model, tokenizer = load_model(MODEL_PATH)
 
 app = FastAPI()
 
 
-def convert_messages_to_prompt(messages: List[Message]):
-    prompt = ""
+def convert_messages_to_prompt_tokens(messages: List[Message]) -> mx.array:
+    prompt = []
     for msg in messages:
-        if msg.role == Role.assistant:
-            prompt += f"<s>[INST] {msg.content} [/INST] "
+        if msg.role == Role.user:
+            prompt.extend(tokenizer.encode(f"[INST] {msg.content} [/INST]"))
         else:
-            prompt += f"{msg.content} </s> "
-    return prompt
+            prompt.extend(tokenizer.encode(msg.content))
+            prompt.append(tokenizer.eos_id)
+    
+    return mx.array(prompt)
 
 
 @app.post("/chat/completions", response_model=ChatCompletionResponse)
 async def create_chat_completion(request: CreateChatCompletionRequest):
-    prompt = convert_messages_to_prompt(messages=request.messages)
+    prompt_tokens = convert_messages_to_prompt_tokens(messages=request.messages)
 
-    generated_message = generate_text(
-        prompt=prompt,
+    generated_message = generate_text_from_tokens(
+        prompt_tokens=prompt_tokens,
         model=model,
         tokenizer=tokenizer,
         max_tokens=request.max_tokens,
