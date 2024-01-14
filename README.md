@@ -1,11 +1,11 @@
-# Mistral 7b API (MLX)
+# Mistral 7b API (using MLX)
 
-This project uses Apples's MLX framework to run inference on a Mistral 7b instruct model for text generation over a simple API. 
+This project uses Apples's MLX framework to run inference on a Mistral 7b instruct model for text generation over a simple API. The code has been adapted from [here](https://huggingface.co/mlx-community/Mistral-7B-Instruct-v0.2). 
 
 ## Setup
 
 1. Clone the repository.
-2. Run `download_model.sh` to download the Mistral MLX model and setup the virtual environment.
+2. Run `download_model.sh` to download the Mistral-7B-Instruct-v0.2 weights and tokenizer (it also sets up the virtual environment)
 3. Run the FastAPI server with `start.sh`
 ## API
 
