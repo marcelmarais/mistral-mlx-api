@@ -267,6 +267,6 @@ def generate_text_from_tokens(
         if token == tokenizer.eos_id:
             break
         tokens.append(token)
-    [print(str(i), tokenizer.decode([i.item()])) for i in tokens]
+
     generated_response = tokenizer.decode([t.item() for t in tokens])
     return Message(role=Role.assistant, content=generated_response[1:])
