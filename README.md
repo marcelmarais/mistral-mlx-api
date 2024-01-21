@@ -1,6 +1,6 @@
 # Mistral 7b API (using MLX)
 
-This project uses Apples's MLX framework to run inference on a Mistral 7b instruct model for text generation over a simple API. The code has been adapted from [here](https://huggingface.co/mlx-community/Mistral-7B-Instruct-v0.2). 
+This project uses Apple's MLX framework to allow text generation on a Mistral 7b instruct model through a straightforward OpenAI style API. The code is modified from the version available [here](https://huggingface.co/mlx-community/Mistral-7B-Instruct-v0.2). 
 
 ## Setup
 
